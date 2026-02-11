@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PALPITEIROS - Oficial</title>
+    <style>
+        :root { --primary: #075e54; --accent: #25d366; --bg: #f0f2f5; --white: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding: 10px; }
+        .container { max-width: 900px; margin: auto; }
+        header { 
+            text-align: center; padding: 40px 20px; 
+            background-image: linear-gradient(rgba(7, 94, 84, 0.8), rgba(7, 94, 84, 0.8)), url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVByjP3uMUZ4zh-dNM2Y8mv1hZHuJir-x7VStSmoAwfx0mSzqSiUylYr4&s=10');
+            background-size: cover; background-position: center; color: white; border-radius: 15px 15px 0 0; position: relative;
+        }
+        header h1 { margin: 0; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .criador { position: absolute; bottom: 5px; left: 15px; font-size: 11px; opacity: 0.8; font-style: italic; }
+        .main-card { background: var(--white); padding: 20px; border-radius: 0 0 15px 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .section-title { color: var(--primary); font-weight: bold; margin: 20px 0 10px; border-left: 4px solid var(--accent); padding-left: 10px; }
+        textarea { width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; font-size: 14px; box-sizing: border-box; background: #fafafa; font-family: monospace; }
+        .grid-p { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 10px; }
+        .card-p { background: #fdfdfd; padding: 10px; border: 1px solid #eee; border-radius: 8px; position: relative; }
+        .card-p strong { display: block; margin-bottom: 5px; color: #075e54; font-size: 14px; }
+        .btn-limpar { position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer; font-size: 16px; }
+        .btn-calc { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .area-botoes { display: none; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .btn-copy { padding: 12px 15px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; flex: 1; min-width: 150px; }
+        #resultado-final { background: #fff; padding: 20px; border: 2px solid #ddd; border-radius: 10px; white-space: pre-wrap; margin-top: 10px; display: none; font-family: monospace; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>⚽ PALPITEIROS</h1>
+        <p>Sistema Inteligente de Atualização da Rodada</p>
+        <div class="criador">Criador: Leandro</div>
+    </header>
+    <div class="main-card">
+        <div class="section-title">📊 1. TABELA ACUMULADA</div>
+        <textarea id="tabela_anterior" oninput="salvarDados()"></textarea>
+        <div class="section-title">🚨 2. RESULTADOS OFICIAIS</div>
+        <textarea id="resultados_oficiais" oninput="salvarDados()"></textarea>
+        <div class="section-title">👤 3. PALPITES INDIVIDUAIS</div>
+        <div class="grid-p">
+            <script>
+                for(let i=0; i<6; i++) {
+                    document.write(`
+                        <div class="card-p">
+                            <strong id="label-${i}">Part. ${i+1}</strong>
+                            <button class="btn-limpar" onclick="limparCampo(${i})">🗑️</button>
+                            <textarea class="palpite-input" oninput="detectarNome(${i})"></textarea>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+        <button class="btn-calc" onclick="processarBolao()">🔥 ATUALIZAR RANKING</button>
+        <div class="area-botoes" id="areaBotoes">
+            <button class="btn-copy" style="background:#1a73e8" onclick="copiarOpcao('ranking')">🏆 Classificação</button>
+            <button class="btn-copy" style="background:#f39c12" onclick="copiarOpcao('hoje')">⚽ Pontos de Hoje</button>
+            <button class="btn-copy" style="background:#075e54" onclick="copiarOpcao('completo')">📋 Tudo</button>
+        </div>
+        <div id="resultado-final"></div>
+    </div>
+</div>
+<script>
+let cacheResultado = { completo: "", ranking: "", hoje: "" };
+const mapaEmoji = { '0️⃣':'0','1️⃣':'1','2️⃣':'2','3️⃣':'3','4️⃣':'4','5️⃣':'5','6️⃣':'6','7️⃣':'7','8️⃣':'8','9️⃣':'9' };
+
+// CARREGAR DADOS AO ABRIR
+window.onload = () => {
+    document.getElementById('tabela_anterior').value = localStorage.getItem('tabela') || "";
+    document.getElementById('resultados_oficiais').value = localStorage.getItem('resultados') || "";
+    const palpites = JSON.parse(localStorage.getItem('palpites') || "[]");
+    document.querySelectorAll('.palpite-input').forEach((el, i) => {
+        el.value = palpites[i] || "";
+        detectarNome(i);
+    });
+};
+
+function salvarDados() {
+    localStorage.setItem('tabela', document.getElementById('tabela_anterior').value);
+    localStorage.setItem('resultados', document.getElementById('resultados_oficiais').value);
+    const palpites = Array.from(document.querySelectorAll('.palpite-input')).map(el => el.value);
+    localStorage.setItem('palpites', JSON.stringify(palpites));
+}
+
+function detectarNome(index) {
+    const texto = document.querySelectorAll('.palpite-input')[index].value;
+    const label = document.getElementById('label-' + index);
+    const nome = extrairNome(texto);
+    label.innerText = (texto.trim() === "" || nome === "Participante") ? "Part. " + (index + 1) : "👤 " + nome;
+    salvarDados();
+}
+
+function limparCampo(index) {
+    document.querySelectorAll('.palpite-input')[index].value = "";
+    detectarNome(index);
+}
+
+function padronizarNome(n) {
+    n = n.trim().toLowerCase().replace(/[🔥⏰👤☑️🔦🏆\*]/g, '').trim();
+    if (n === "pit" || n === "pitt") return "Pitt";
+    if (n === "leo" || n === "leonardo") return "Leo";
+    if (n === "fer" || n === "feer" || n === "fernando") return "Fer";
+    if (n === "acre" || n === "acreano" || n === "anderson silva") return "Acreano";
+    if (n === "doguinha" || n === "douglas") return "Doguinha";
+    return n.charAt(0).toUpperCase() + n.slice(1);
+}
+
+function extrairNome(txt) {
+    const m = txt.match(/(?:Nome|👤Nome)[:\s#\*]*([^\n\*🔥⏰\r]+)/i);
+    return padronizarNome(m ? m[1] : "Participante");
+}
+
+function normalizar(t) {
+    let txt = t;
+    for (const [e, n] of Object.entries(mapaEmoji)) txt = txt.split(e).join(n);
+    return txt.replace(/\*/g, '');
+}
+
+function extrairJogos(txtBruto) {
+    const texto = normalizar(txtBruto);
+    const regex = /([a-zA-Záéíóúçãõ\s\.\-]+)\s*(\d)\s*[xX]\s*(\d)\s*([a-zA-Záéíóúçãõ\s\.\-]+)/g;
+    let m, jogos = [];
+    while ((m = regex.exec(texto)) !== null) {
+        let tB = m[4].split(/\d{2}:\d{2}/)[0].split('\n')[0].trim();
+        jogos.push({ id: (m[1].trim() + tB).toLowerCase().replace(/\s/g, ''), timeA: m[1].trim(), timeB: tB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
+    }
+    return jogos;
+}
+
+function processarBolao() {
+    const oficiais = extrairJogos(document.getElementById('resultados_oficiais').value);
+    const acumuladosTexto = document.getElementById('tabela_anterior').value;
+    let mapaAcum = {};
+    acumuladosTexto.split('\n').forEach(l => {
+        const m = l.match(/(\d+)º\s+([a-zA-Záéíóúçãõ\s]+)\s+(\d+)\s+Pts/i);
+        if (m) mapaAcum[padronizarNome(m[2]).toLowerCase()] = parseInt(m[3]);
+    });
+
+    let ranking = [];
+    document.querySelectorAll('.palpite-input').forEach(input => {
+        if (!input.value.trim()) return;
+        const nome = extrairNome(input.value);
+        const palpites = extrairJogos(input.value);
+        let ptsHoje = 0, log = "";
+        oficiais.forEach(o => {
+            const p = palpites.find(x => x.id === o.id);
+            if (p) {
+                let e = "🔴";
+                if (o.golsA === p.golsA && o.golsB === p.golsB) { ptsHoje += 3; e = "🟢"; }
+                else if (Math.sign(o.golsA - o.golsB) === Math.sign(p.golsA - p.golsB)) { ptsHoje += 1; e = "🟡"; }
+                log += `${o.timeA} ${p.golsA}x${p.golsB} ${o.timeB} ${e}\n`;
+            }
+        });
+        ranking.push({ nome, ptsHoje, total: (mapaAcum[nome.toLowerCase()] || 0) + ptsHoje, log });
+    });
+
+    ranking.sort((a, b) => b.total - a.total);
+    const medalhas = ["*🥇1º", "🥈2º", "⚪️ 3º", "⚪️ 4º", "🔴 5º", "🔴 6º"];
+    let txtRanking = "*🔰_C L A S S I F I C A Ç Ã O_🔰*\n      *(💯% A t u a l i z a d a)*\n   \n";
+    ranking.forEach((p, i) => {
+        let pref = medalhas[i] || `⚪️ ${i+1}º`;
+        txtRanking += (i === 0) ? `${pref} ${p.nome} ${p.total} Pts🏆*\n\n` : (i === ranking.length-1 && i >= 5) ? `${pref} ${p.nome} ${p.total} Pts🔦\n\n` : `${pref} ${p.nome} ${p.total} Pts\n\n`;
+    });
+    txtRanking += "*_🏆 F i n a l 07 Maio🥇_*";
+    
+    cacheResultado = { ranking: txtRanking, hoje: ranking.map(p => `*${p.nome}:* +${p.ptsHoje} Pts`).join('\n'), completo: txtRanking + "\n\n*📊 CONFERÊNCIA:*\n" + ranking.map(p => `👤 *${p.nome}*:\n${p.log}`).join('\n') };
+    document.getElementById('resultado-final').innerText = cacheResultado.completo;
+    document.getElementById('resultado-final').style.display = 'block';
+    document.getElementById('areaBotoes').style.display = 'flex';
+}
+
+function copiarOpcao(tipo) {
+    const el = document.createElement('textarea');
+    el.value = cacheResultado[tipo];
+    document.body.appendChild(el); el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    alert("Copiado!");
+}
+</script>
+</body>
+</html>
