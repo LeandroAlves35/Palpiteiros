@@ -20,11 +20,11 @@
         textarea { width: 100%; height: 120px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; font-size: 14px; box-sizing: border-box; background: #fafafa; font-family: monospace; }
         .grid-p { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 10px; }
         .card-p { background: #fdfdfd; padding: 10px; border: 1px solid #eee; border-radius: 8px; position: relative; }
-        .card-p strong { display: block; margin-bottom: 5px; color: #075e54; font-size: 14px; }
-        .btn-limpar { position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer; font-size: 16px; }
         .btn-calc { width: 100%; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
         .area-botoes { display: none; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         .btn-copy { padding: 12px 15px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; flex: 1; min-width: 150px; }
+        .historico-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; display: none; }
+        .btn-hist { background: #075e54; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin: 5px; font-size: 12px; }
         #resultado-final { background: #fff; padding: 20px; border: 2px solid #ddd; border-radius: 10px; white-space: pre-wrap; margin-top: 10px; display: none; font-family: monospace; }
     </style>
 </head>
@@ -37,39 +37,76 @@
     </header>
     <div class="main-card">
         <div class="section-title">📊 1. TABELA ACUMULADA</div>
-        <textarea id="tabela_anterior" oninput="salvarDados()"></textarea>
+        <textarea id="tabela_anterior" oninput="salvarDados()">*🥇1º Pitt 34 Pts🏆*
+🥈2º Leandro 32 Pts
+⚪️ 3º Acreano 27 Pts
+⚪️ 4º Leo 26 Pts
+🔴 5º Doguinha 25 Pts
+🔴 6º Fer 24 Pts🔦</textarea>
+
         <div class="section-title">🚨 2. RESULTADOS OFICIAIS</div>
-        <textarea id="resultados_oficiais" oninput="salvarDados()"></textarea>
+        <textarea id="resultados_oficiais" oninput="salvarDados()" placeholder="Cole aqui os resultados novos..."></textarea>
+
         <div class="section-title">👤 3. PALPITES INDIVIDUAIS</div>
         <div class="grid-p">
             <script>
+                const nomesBase = ["Pitt", "Leandro", "Acreano", "Leo", "Doguinha", "Fer"];
                 for(let i=0; i<6; i++) {
                     document.write(`
                         <div class="card-p">
-                            <strong id="label-${i}">Part. ${i+1}</strong>
+                            <strong id="label-${i}">${nomesBase[i]}</strong>
                             <button class="btn-limpar" onclick="limparCampo(${i})">🗑️</button>
-                            <textarea class="palpite-input" oninput="detectarNome(${i})"></textarea>
+                            <textarea class="palpite-input" oninput="detectarNome(${i})" placeholder="Cole o palpite aqui..."></textarea>
                         </div>
                     `);
                 }
             </script>
         </div>
+
         <button class="btn-calc" onclick="processarBolao()">🔥 ATUALIZAR RANKING</button>
+
         <div class="area-botoes" id="areaBotoes">
             <button class="btn-copy" style="background:#1a73e8" onclick="copiarOpcao('ranking')">🏆 Classificação</button>
             <button class="btn-copy" style="background:#f39c12" onclick="copiarOpcao('hoje')">⚽ Pontos de Hoje</button>
             <button class="btn-copy" style="background:#075e54" onclick="copiarOpcao('completo')">📋 Tudo</button>
         </div>
+
+        <div class="section-title">📖 HISTÓRICO DE PALPITES</div>
+        <div style="display: flex; flex-wrap: wrap;">
+            <button class="btn-hist" onclick="verHist('Pitt')">Pitt</button>
+            <button class="btn-hist" onclick="verHist('Leandro')">Leandro</button>
+            <button class="btn-hist" onclick="verHist('Acreano')">Acreano</button>
+            <button class="btn-hist" onclick="verHist('Leo')">Leo</button>
+            <button class="btn-hist" onclick="verHist('Doguinha')">Doguinha</button>
+            <button class="btn-hist" onclick="verHist('Fer')">Fer</button>
+        </div>
+        <div id="historico-content" class="historico-box"></div>
+
         <div id="resultado-final"></div>
     </div>
 </div>
+
 <script>
+const historicoDados = {
+    'Pitt': "RODADA 01:\nMan United 2x1 Tottenham\nWolfsburg 1x2 Borussia\n...\nRODADA 02:\nRoma 1x0 Cagliari\nPorto 2x1 Sporting\n...",
+    'Leandro': "RODADA 01:\nMan United x Tottenham\nWolfsburg 1x2 Borussia\n...\nRODADA 02:\nRoma 1x0 Cagliari\nPorto 1x0 Sporting\n...",
+    'Acreano': "RODADA 01:\nMan United 2x2 Tottenham\nWolfsburg 1x1 Borussia\n...\nRODADA 02:\nRoma x Cagliari\nPorto x Sporting\n...",
+    'Leo': "RODADA 01:\nMan United 2x1 Tottenham\nWolfsburg 1x3 Borussia\n...\nRODADA 02:\nRoma 1x0 Cagliari\nPorto 1x1 Sporting\n...",
+    'Doguinha': "RODADA 01:\nMan United 3x1 Tottenham\nWolfsburg 1x2 Borussia\n...\nRODADA 02:\nRoma 2x0 Cagliari\nPorto 1x1 Sporting\n...",
+    'Fer': "RODADA 01:\nMan United 2x1 Tottenham\nWolfsburg 1x2 Borussia\n...\nRODADA 02:\nRoma 2x0 Cagliari\nPorto 1x0 Sporting\n..."
+};
+
+function verHist(nome) {
+    const box = document.getElementById('historico-content');
+    box.innerText = `Histórico de ${nome}:\n\n${historicoDados[nome]}`;
+    box.style.display = 'block';
+}
+
 let cacheResultado = { completo: "", ranking: "", hoje: "" };
 const mapaEmoji = { '0️⃣':'0','1️⃣':'1','2️⃣':'2','3️⃣':'3','4️⃣':'4','5️⃣':'5','6️⃣':'6','7️⃣':'7','8️⃣':'8','9️⃣':'9' };
 
-// CARREGAR DADOS AO ABRIR
 window.onload = () => {
-    document.getElementById('tabela_anterior').value = localStorage.getItem('tabela') || "";
+    if(localStorage.getItem('tabela')) document.getElementById('tabela_anterior').value = localStorage.getItem('tabela');
     document.getElementById('resultados_oficiais').value = localStorage.getItem('resultados') || "";
     const palpites = JSON.parse(localStorage.getItem('palpites') || "[]");
     document.querySelectorAll('.palpite-input').forEach((el, i) => {
@@ -89,13 +126,14 @@ function detectarNome(index) {
     const texto = document.querySelectorAll('.palpite-input')[index].value;
     const label = document.getElementById('label-' + index);
     const nome = extrairNome(texto);
-    label.innerText = (texto.trim() === "" || nome === "Participante") ? "Part. " + (index + 1) : "👤 " + nome;
+    if(texto.trim() !== "" && nome !== "Participante") label.innerText = "👤 " + nome;
     salvarDados();
 }
 
 function limparCampo(index) {
     document.querySelectorAll('.palpite-input')[index].value = "";
-    detectarNome(index);
+    document.getElementById('label-' + index).innerText = nomesBase[index];
+    salvarDados();
 }
 
 function padronizarNome(n) {
@@ -173,11 +211,8 @@ function processarBolao() {
 }
 
 function copiarOpcao(tipo) {
-    const el = document.createElement('textarea');
-    el.value = cacheResultado[tipo];
-    document.body.appendChild(el); el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+    const el = document.createElement('textarea'); el.value = cacheResultado[tipo];
+    document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
     alert("Copiado!");
 }
 </script>
