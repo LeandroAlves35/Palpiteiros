@@ -64,14 +64,12 @@
         .section-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin: 20px 0 10px 5px; font-weight: 700; }
         .pontos-hoje-box { background: #f8fafc; color: #0f172a; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-family: monospace; white-space: pre-wrap; text-align: center; font-weight: bold; }
         
-        /* DESIGN DA CONFERÊNCIA */
         .conf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
         .conf-card { background: #0f172a; border-radius: 12px; padding: 15px; border-left: 4px solid var(--accent); position: relative; overflow: hidden; }
         body.light-mode .conf-card { background: #f9f9f9; border-color: #ddd; border-left-color: var(--accent); }
         .conf-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
         body.light-mode .conf-header { color: #075e54; }
         
-        /* A LINHA TOP DIVISÓRIA */
         .conf-divider { 
             height: 2px; 
             width: 60%; 
@@ -113,7 +111,7 @@
     <div class="main-card">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
             <div class="card-p">
-                <strong>📊 Acumulados</strong>
+                <strong>📊 Classificação Geral</strong>
                 <button class="trash-btn" onclick="limparTexto('tabela_anterior')">🗑️</button>
                 <textarea id="tabela_anterior"></textarea>
             </div>
@@ -251,7 +249,6 @@ function processarBolao() {
         return `<div class="bar-item rank-${i+1}"><div style="font-size: 14px; margin-bottom: 2px;">${i+1}º</div><div class="name-label">${displayNome}</div><div class="pts-label">${p.total} Pts</div></div>`;
     }).join('');
 
-    // RENDERIZAÇÃO DA CONFERÊNCIA COM A NOVA DIVISÓRIA
     document.getElementById('conf-area').innerHTML = rankingTotal.map(p => `
         <div class="conf-card">
             <div class="conf-header">
@@ -284,3 +281,4 @@ function copiarOpcao(t) {
 </script>
 </body>
 </html>
+
