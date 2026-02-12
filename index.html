@@ -68,26 +68,8 @@
         .conf-card { background: #0f172a; border-radius: 12px; padding: 15px; border-left: 4px solid var(--accent); position: relative; overflow: hidden; }
         body.light-mode .conf-card { background: #f9f9f9; border-color: #ddd; border-left-color: var(--accent); }
         .conf-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-        body.light-mode .conf-header { color: #075e54; }
-        
-        .conf-divider { 
-            height: 2px; 
-            width: 60%; 
-            background: linear-gradient(to right, var(--accent), transparent); 
-            margin-bottom: 12px; 
-            border-radius: 2px; 
-            opacity: 0.6;
-        }
-
-        .conf-log { 
-            font-size: 10px; 
-            color: #94a3b8; 
-            white-space: pre-wrap; 
-            line-height: 1.6;
-            background: rgba(0,0,0,0.2);
-            padding: 8px;
-            border-radius: 8px;
-        }
+        .conf-divider { height: 2px; width: 60%; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 12px; border-radius: 2px; opacity: 0.6; }
+        .conf-log { font-size: 10px; color: #94a3b8; white-space: pre-wrap; line-height: 1.6; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; }
         body.light-mode .conf-log { background: rgba(0,0,0,0.05); color: #475569; }
 
         .area-botoes { display: none; gap: 8px; margin: 15px 0; }
@@ -99,10 +81,7 @@
     <header>
         <div class="switch-container">
             <span style="font-size: 10px; opacity: 0.7;">DARK</span>
-            <label class="switch">
-                <input type="checkbox" onchange="toggleTheme()">
-                <span class="slider"></span>
-            </label>
+            <label class="switch"><input type="checkbox" onchange="toggleTheme()"><span class="slider"></span></label>
         </div>
         <h1>PALPITEIROS</h1>
         <div class="criador-txt">Criador: Leandro</div>
@@ -110,35 +89,19 @@
 
     <div class="main-card">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-            <div class="card-p">
-                <strong>📊 Classificação</strong>
-                <button class="trash-btn" onclick="limparTexto('tabela_anterior')">🗑️</button>
-                <textarea id="tabela_anterior"></textarea>
-            </div>
-            <div class="card-p">
-                <strong>🚨 Resultados</strong>
-                <button class="trash-btn" onclick="limparTexto('resultados_oficiais')">🗑️</button>
-                <textarea id="resultados_oficiais"></textarea>
-            </div>
+            <div class="card-p"><strong>📊 Classificação</strong><button class="trash-btn" onclick="limparTexto('tabela_anterior')">🗑️</button><textarea id="tabela_anterior"></textarea></div>
+            <div class="card-p"><strong>🚨 Resultados</strong><button class="trash-btn" onclick="limparTexto('resultados_oficiais')">🗑️</button><textarea id="resultados_oficiais"></textarea></div>
         </div>
-
         <div class="section-title">👤 Palpites dos Membros</div>
         <div class="grid-p">
-            <script>
-                for(let i=0; i<6; i++){
-                    document.write(`<div class="card-p"><strong id="label-${i}">Part. ${i+1}</strong><button class="trash-btn" onclick="limparIndividual(${i})">🗑️</button><textarea class="palpite-input" oninput="detectarNome(${i})"></textarea></div>`);
-                }
-            </script>
+            <script>for(let i=0; i<6; i++){document.write(`<div class="card-p"><strong id="label-${i}">Part. ${i+1}</strong><button class="trash-btn" onclick="limparIndividual(${i})">🗑️</button><textarea class="palpite-input" oninput="detectarNome(${i})"></textarea></div>`);}</script>
         </div>
-
         <button class="btn-calc" onclick="processarBolao()">ATUALIZAR RODADA</button>
-        
         <div class="area-botoes" id="areaBotoes">
             <button class="btn-copy" style="background:#3b82f6" onclick="copiarOpcao('ranking')">🏆 Tabela</button>
             <button class="btn-copy" style="background:#f59e0b" onclick="copiarOpcao('hoje')">⚽ Pontos</button>
             <button class="btn-copy" style="background:#10b981" onclick="copiarOpcao('completo')">📋 Tudo</button>
         </div>
-
         <div id="resultado-display">
             <div class="section-title">🏆 CLASSIFICAÇÃO GERAL</div>
             <div class="chart-row" id="chart-area"></div>
@@ -154,10 +117,7 @@
 let cacheResultado = { completo: "", ranking: "", hoje: "" };
 const mapaEmoji = { '0️⃣':'0','1️⃣':'1','2️⃣':'2','3️⃣':'3','4️⃣':'4','5️⃣':'5','6️⃣':'6','7️⃣':'7','8️⃣':'8','9️⃣':'9' };
 
-function toggleTheme() {
-    document.body.classList.toggle('light-mode');
-}
-
+function toggleTheme() { document.body.classList.toggle('light-mode'); }
 function limparTexto(id) { document.getElementById(id).value = ""; }
 function limparIndividual(index) {
     document.querySelectorAll('.palpite-input')[index].value = "";
@@ -183,7 +143,7 @@ function padronizarNome(n) {
 
 function normalizar(t) {
     let txt = t; for (const [e, n] of Object.entries(mapaEmoji)) txt = txt.split(e).join(n);
-    return txt.replace(/\*/g, '').replace(/[^\x20-\x7EáéíóúçãõÁÉÍÓÚÇÃÕ]/g, '');
+    return txt.replace(/\*/g, '');
 }
 
 function compararTimes(timeA, timeB) {
@@ -193,11 +153,14 @@ function compararTimes(timeA, timeB) {
 
 function extrairTodosJogos(textoBruto) {
     const texto = normalizar(textoBruto);
-    const regex = /([a-zA-Záéíóúçãõ\s\.\-]+)\s*(\d+)\s*[xX]\s*(\d+)\s*([a-zA-Záéíóúçãõ\s\.\-]+)/g;
+    // Regex flexível: procura por Placares (N x N) e pega os nomes dos times ao redor
+    const regex = /([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-]+)\s+(\d+)\s*[xX]\s*(\d+)\s+([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-]+)/g;
     let m, jogos = [];
     while ((m = regex.exec(texto)) !== null) {
+        // Limpeza básica para tirar lixo que sobra no nome dos times
+        let tA = m[1].trim().split('\n').pop().trim();
         let tB = m[4].split(/\d{2}:\d{2}/)[0].split('\n')[0].trim();
-        jogos.push({ timeA: m[1].trim(), timeB: tB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
+        jogos.push({ timeA: tA, timeB: tB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
     }
     return jogos;
 }
@@ -238,41 +201,27 @@ function processarBolao() {
     });
 
     rankingTotal.sort((a, b) => b.total - a.total);
-    
     const chartArea = document.getElementById('chart-area');
     chartArea.innerHTML = rankingTotal.slice(0, 6).map((p, i) => {
         let displayNome = p.nome;
         if (i === 0) displayNome = '🥇 ' + p.nome;
         else if (i === 1) displayNome = '🥈 ' + p.nome;
         else if (i === 5) displayNome = '🔦 ' + p.nome;
-
         return `<div class="bar-item rank-${i+1}"><div style="font-size: 14px; margin-bottom: 2px;">${i+1}º</div><div class="name-label">${displayNome}</div><div class="pts-label">${p.total} Pts</div></div>`;
     }).join('');
 
-    document.getElementById('conf-area').innerHTML = rankingTotal.map(p => `
-        <div class="conf-card">
-            <div class="conf-header">
-                <span>👤 ${p.nome}</span> 
-                <span>+${p.ptsHoje} PTS</span>
-            </div>
-            <div class="conf-divider"></div>
-            <div class="conf-log">${p.log}</div>
-        </div>
-    `).join('');
-
+    document.getElementById('conf-area').innerHTML = rankingTotal.map(p => `<div class="conf-card"><div class="conf-header"><span>👤 ${p.nome}</span><span>+${p.ptsHoje} PTS</span></div><div class="conf-divider"></div><div class="conf-log">${p.log}</div></div>`).join('');
+    
     let txtRank = "*🔰_C L A S S I F I C A Ç Ã O_🔰*\n      *(💯% A t u a l i z a d a)*\n\n";
     const medalhas = ["*🥇1º", "🥈2º", "⚪️ 3º", "⚪️ 4º", "🔴 5º", "🔴 6º"];
     rankingTotal.forEach((p, i) => { txtRank += `${medalhas[i] || `⚪️ ${i+1}º`} ${p.nome} ${p.total} Pts${i===0?'🏆*':i===rankingTotal.length-1?'🔦':''}\n\n`; });
     txtRank += "*_🏆 F i n a l 07 Maio🥇_*";
-    
     let txtHoje = "⚽ PONTOS DA RODADA:\n\n" + [...rankingTotal].sort((a,b)=>b.ptsHoje-a.ptsHoje).map(p=>`${p.nome}: +${p.ptsHoje} Pts`).join('\n');
     cacheResultado = { ranking: txtRank, hoje: txtHoje, completo: txtRank + "\n\n" + txtHoje + "\n\n*📊 CONFERÊNCIA:*" + rankingTotal.map(p=>`\n\n👤 *${p.nome}*:\n${p.log}`).join('') };
-    
     document.getElementById('hoje-visivel').innerText = txtHoje;
     document.getElementById('resultado-display').style.display = 'block';
     document.getElementById('areaBotoes').style.display = 'flex';
 }
-
 function copiarOpcao(t) {
     const el = document.createElement('textarea'); el.value = cacheResultado[t];
     document.body.appendChild(el); el.select(); document.execCommand('copy');
@@ -281,4 +230,3 @@ function copiarOpcao(t) {
 </script>
 </body>
 </html>
-
