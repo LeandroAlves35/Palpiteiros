@@ -9,9 +9,7 @@
             --primary: #075e54; --accent: #25d366; --bg: #0f172a; --card-bg: #1e293b;
             --gold: #fbbf24; --silver: #94a3b8; --bronze: #b45309; --danger: #ef4444; --white: #ffffff;
         }
-        body.light-mode {
-            --bg: #f1f5f9; --card-bg: #ffffff; --white: #0f172a;
-        }
+        body.light-mode { --bg: #f1f5f9; --card-bg: #ffffff; --white: #0f172a; }
         body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 12px; transition: 0.3s; }
         .container { max-width: 900px; margin: auto; }
         
@@ -36,7 +34,6 @@
         .card-p { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #334155; position: relative; margin-bottom: 10px; }
         body.light-mode .card-p { background: #f9f9f9; border-color: #ddd; }
         .card-p strong { display: block; margin-bottom: 8px; color: #fff; font-size: 11px; opacity: 0.8; }
-        body.light-mode .card-p strong { color: #000; }
 
         textarea { width: 100%; height: 80px; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; font-size: 13px; box-sizing: border-box; background: #1e293b; color: #cbd5e1; outline: none; }
         body.light-mode textarea { background: #fff; color: #333; border-color: #eee; }
@@ -50,6 +47,8 @@
         .btn-calc { width: 100%; padding: 16px; background: var(--accent); color: #064e3b; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         
         #resultado-display { display: none; margin-top: 20px; }
+        
+        /* GRÁFICO RESTRUTURADO */
         .chart-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 4px; height: 120px; margin: 30px 0 35px 0; padding: 0 5px; }
         .bar-item { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; border-radius: 6px 6px 3px 3px; color: #0f172a; font-weight: bold; padding: 8px 1px; text-align: center; }
         .rank-1 { background: var(--gold); height: 100%; border: 1px solid #fff; }
@@ -64,33 +63,16 @@
         .section-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin: 20px 0 10px 5px; font-weight: 700; }
         .pontos-hoje-box { background: #f8fafc; color: #0f172a; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-family: monospace; white-space: pre-wrap; text-align: center; font-weight: bold; }
         
-        /* DESIGN DA CONFERÊNCIA */
         .conf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
         .conf-card { background: #0f172a; border-radius: 12px; padding: 15px; border-left: 4px solid var(--accent); position: relative; overflow: hidden; }
         body.light-mode .conf-card { background: #f9f9f9; border-color: #ddd; border-left-color: var(--accent); }
         .conf-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-        body.light-mode .conf-header { color: #075e54; }
-        
-        /* A LINHA TOP DIVISÓRIA */
-        .conf-divider { 
-            height: 2px; 
-            width: 60%; 
-            background: linear-gradient(to right, var(--accent), transparent); 
-            margin-bottom: 12px; 
-            border-radius: 2px; 
-            opacity: 0.6;
-        }
+        .conf-divider { height: 2px; width: 60%; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 12px; border-radius: 2px; opacity: 0.6; }
 
         .conf-log { 
-            font-size: 10px; 
-            color: #94a3b8; 
-            white-space: pre-wrap; 
-            line-height: 1.6;
-            background: rgba(0,0,0,0.2);
-            padding: 8px;
-            border-radius: 8px;
+            font-size: 10px; color: #94a3b8; white-space: pre-wrap; line-height: 1.6;
+            background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px;
         }
-        body.light-mode .conf-log { background: rgba(0,0,0,0.05); color: #475569; }
 
         .area-botoes { display: none; gap: 8px; margin: 15px 0; }
         .btn-copy { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 11px; }
@@ -101,10 +83,7 @@
     <header>
         <div class="switch-container">
             <span style="font-size: 10px; opacity: 0.7;">DARK</span>
-            <label class="switch">
-                <input type="checkbox" onchange="toggleTheme()">
-                <span class="slider"></span>
-            </label>
+            <label class="switch"><input type="checkbox" onchange="toggleTheme()"><span class="slider"></span></label>
         </div>
         <h1>PALPITEIROS</h1>
         <div class="criador-txt">Criador: Leandro</div>
@@ -156,10 +135,7 @@
 let cacheResultado = { completo: "", ranking: "", hoje: "" };
 const mapaEmoji = { '0️⃣':'0','1️⃣':'1','2️⃣':'2','3️⃣':'3','4️⃣':'4','5️⃣':'5','6️⃣':'6','7️⃣':'7','8️⃣':'8','9️⃣':'9' };
 
-function toggleTheme() {
-    document.body.classList.toggle('light-mode');
-}
-
+function toggleTheme() { document.body.classList.toggle('light-mode'); }
 function limparTexto(id) { document.getElementById(id).value = ""; }
 function limparIndividual(index) {
     document.querySelectorAll('.palpite-input')[index].value = "";
@@ -177,30 +153,39 @@ function padronizarNome(n) {
     if (nome.includes("pit")) nome = "pitt";
     if (nome.includes("leo")) nome = "leo"; 
     if (nome.includes("fer")) nome = "fer";
-    if (nome.includes("acre") || nome.includes("anderson")) nome = "acreano"; 
-    if (nome.includes("doguinha") || nome.includes("douglas")) nome = "doguinha";
+    if (nome.includes("douglas")) nome = "doguinha";
+    if (nome.includes("anderson")) nome = "acreano";
     if (nome.includes("leandro")) nome = "leandro";
-    return nome.split(' ').map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1)).join(' ');
+    return nome.split(' ').map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
 }
 
 function normalizar(t) {
     let txt = t; for (const [e, n] of Object.entries(mapaEmoji)) txt = txt.split(e).join(n);
-    return txt.replace(/\*/g, '').replace(/[^\x20-\x7EáéíóúçãõÁÉÍÓÚÇÃÕ]/g, '');
+    return txt.replace(/\*/g, '');
 }
 
 function compararTimes(timeA, timeB) {
-    const limpar = (t) => t.toLowerCase().replace(/manchester\s*city/g, 'city').replace(/man\s*city/g, 'city').replace(/[^a-z0-9]/g, '');
-    return limpar(timeA).includes(limpar(timeB)) || limpar(timeB).includes(limpar(timeA));
+    const limpar = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
+    let t1 = limpar(timeA), t2 = limpar(timeB);
+    return t1.includes(t2) || t2.includes(t1);
 }
 
 function extrairTodosJogos(textoBruto) {
-    const texto = normalizar(textoBruto);
-    const regex = /([a-zA-Záéíóúçãõ\s\.\-]+)\s*(\d+)\s*[xX]\s*(\d+)\s*([a-zA-Záéíóúçãõ\s\.\-]+)/g;
-    let m, jogos = [];
-    while ((m = regex.exec(texto)) !== null) {
-        let tB = m[4].split(/\d{2}:\d{2}/)[0].split('\n')[0].trim();
-        jogos.push({ timeA: m[1].trim(), timeB: tB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
-    }
+    const textoNormalizado = normalizar(textoBruto);
+    const linhas = textoNormalizado.split(/\n/);
+    let jogos = [];
+    const regex = /([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-\/]+?)\s+(\d+)\s*[xX]\s*(\d+)\s+([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-\/]+)/i;
+
+    linhas.forEach(linha => {
+        const m = linha.match(regex);
+        if (m) {
+            let timeB = m[4].split(/\d{2}:\d{2}/)[0].trim();
+            let timeA = m[1].replace(/[☑️#👤⏰]|^\d+\s*/g, '').trim();
+            if(timeA && timeB) {
+                jogos.push({ timeA: timeA, timeB: timeB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
+            }
+        }
+    });
     return jogos;
 }
 
@@ -241,27 +226,23 @@ function processarBolao() {
 
     rankingTotal.sort((a, b) => b.total - a.total);
     
+    // ATUALIZAÇÃO DO GRÁFICO VISUAL
     const chartArea = document.getElementById('chart-area');
     chartArea.innerHTML = rankingTotal.slice(0, 6).map((p, i) => {
         let displayNome = p.nome;
         if (i === 0) displayNome = '🥇 ' + p.nome;
         else if (i === 1) displayNome = '🥈 ' + p.nome;
-        else if (i === 5) displayNome = '🔦 ' + p.nome;
+        else if (i === rankingTotal.length - 1 || i === 5) displayNome = '🔦 ' + p.nome;
 
         return `<div class="bar-item rank-${i+1}"><div style="font-size: 14px; margin-bottom: 2px;">${i+1}º</div><div class="name-label">${displayNome}</div><div class="pts-label">${p.total} Pts</div></div>`;
     }).join('');
 
-    // RENDERIZAÇÃO DA CONFERÊNCIA COM A NOVA DIVISÓRIA
     document.getElementById('conf-area').innerHTML = rankingTotal.map(p => `
         <div class="conf-card">
-            <div class="conf-header">
-                <span>👤 ${p.nome}</span> 
-                <span>+${p.ptsHoje} PTS</span>
-            </div>
+            <div class="conf-header"><span>👤 ${p.nome}</span> <span>+${p.ptsHoje} PTS</span></div>
             <div class="conf-divider"></div>
             <div class="conf-log">${p.log}</div>
-        </div>
-    `).join('');
+        </div>`).join('');
 
     let txtRank = "*🔰_C L A S S I F I C A Ç Ã O_🔰*\n      *(💯% A t u a l i z a d a)*\n\n";
     const medalhas = ["*🥇1º", "🥈2º", "⚪️ 3º", "⚪️ 4º", "🔴 5º", "🔴 6º"];
