@@ -9,7 +9,6 @@
             --primary: #075e54; --accent: #25d366; --bg: #0f172a; --card-bg: #1e293b;
             --gold: #fbbf24; --silver: #94a3b8; --bronze: #b45309; --danger: #ef4444; --white: #ffffff;
         }
-        body.light-mode { --bg: #f1f5f9; --card-bg: #ffffff; --white: #0f172a; }
         body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg); color: #fff; margin: 0; padding: 12px; transition: 0.3s; }
         .container { max-width: 900px; margin: auto; }
         
@@ -23,20 +22,12 @@
         .criador-txt { font-size: 10px; color: #cbd5e1; opacity: 0.8; margin-top: 5px; }
 
         .switch-container { position: absolute; top: 15px; right: 15px; display: flex; align-items: center; gap: 8px; }
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(20px); }
 
         .main-card { background: var(--card-bg); padding: 15px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .card-p { background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid #334155; position: relative; margin-bottom: 10px; }
-        body.light-mode .card-p { background: #f9f9f9; border-color: #ddd; }
         .card-p strong { display: block; margin-bottom: 8px; color: #fff; font-size: 11px; opacity: 0.8; }
 
         textarea { width: 100%; height: 80px; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; font-size: 13px; box-sizing: border-box; background: #1e293b; color: #cbd5e1; outline: none; }
-        body.light-mode textarea { background: #fff; color: #333; border-color: #eee; }
 
         .trash-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #666; cursor: pointer; font-size: 14px; transition: 0.2s; }
         .trash-btn:hover { color: var(--danger); transform: scale(1.2); }
@@ -47,7 +38,6 @@
         .btn-calc { width: 100%; padding: 16px; background: var(--accent); color: #064e3b; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
         
         #resultado-display { display: none; margin-top: 20px; }
-        
         .chart-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 4px; height: 120px; margin: 30px 0 35px 0; padding: 0 5px; }
         .bar-item { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; border-radius: 6px 6px 3px 3px; color: #0f172a; font-weight: bold; padding: 8px 1px; text-align: center; }
         .rank-1 { background: var(--gold); height: 100%; border: 1px solid #fff; }
@@ -64,7 +54,6 @@
         
         .conf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
         .conf-card { background: #0f172a; border-radius: 12px; padding: 15px; border-left: 4px solid var(--accent); position: relative; overflow: hidden; }
-        body.light-mode .conf-card { background: #f9f9f9; border-color: #ddd; border-left-color: var(--accent); }
         .conf-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
         .conf-divider { height: 2px; width: 60%; background: linear-gradient(to right, var(--accent), transparent); margin-bottom: 12px; border-radius: 2px; opacity: 0.6; }
 
@@ -76,59 +65,68 @@
         .area-botoes { display: none; gap: 8px; margin: 15px 0; }
         .btn-copy { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-        /* ESTILOS DA ZOEIRA LEO */
-        #overlay-leo {
+        #modal-secreto {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center;
-            overflow: hidden;
+            background: rgba(15, 23, 42, 0.98); z-index: 9999; overflow-y: auto; padding: 15px; box-sizing: border-box;
         }
-        .pop-up-leo {
-            background: white; padding: 25px; border-radius: 25px; text-align: center;
-            border: 6px solid #ff69b4; position: relative; z-index: 10002;
-            animation: tremorLento 3s infinite ease-in-out; max-width: 320px; box-shadow: 0 0 40px #ff69b4;
+        .modal-content { max-width: 500px; margin: auto; background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--accent); position: relative; }
+        .btn-close { position: absolute; top: 10px; right: 10px; background: none; color: var(--danger); border: none; font-size: 20px; cursor: pointer; }
+        .secret-icon { cursor: pointer; font-size: 18px; opacity: 0.8; filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.4)); transition: 0.3s; }
+        .secret-icon:hover { opacity: 1; transform: scale(1.3); }
+        
+        .slim-row { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 8px 0; font-size: 11px; display: flex; justify-content: space-between; }
+        .resumo-iguais { background: rgba(37, 211, 102, 0.1); color: var(--accent); padding: 8px; border-radius: 8px; text-align: center; font-size: 10px; margin: 10px 0; font-weight: bold; }
+        .prob-footer { background: #0f172a; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 11px; border-left: 3px solid var(--gold); }
+        
+        select[multiple] { height: 80px; width: 100%; background: #0f172a; color: #fff; border: 1px solid #334155; border-radius: 8px; font-size: 12px; }
+        .tab-btn { padding: 8px; border: none; background: #0f172a; color: #94a3b8; cursor: pointer; font-size: 10px; border-radius: 5px; margin-right: 5px; }
+        .tab-btn.active { background: var(--accent); color: #064e3b; font-weight: bold; }
+
+        /* ESTILOS DA ESTRATÉGIA */
+        #output-lideranca {
+            margin-top: 15px; padding: 15px; border-radius: 12px;
+            background: #0f172a; font-size: 11px; color: #fff; border: 1px solid #334155;
+            display: none; line-height: 1.6;
         }
-        .pop-up-leo img { width: 100%; border-radius: 20px; border: 3px solid #ff69b4; margin-bottom: 12px; display: block; }
-        .pop-up-leo h2 { color: #ff1493; font-size: 30px; margin: 0; font-family: "Comic Sans MS", cursive; }
-        .pop-up-leo input { 
-            width: 90%; margin-top: 18px; padding: 12px; border-radius: 12px; 
-            border: 2px solid #ff69b4; outline: none; text-align: center; font-weight: bold; color: #ff1493;
-        }
-        .btn-fast-reply {
-            display: block; width: 100%; margin-top: 10px; padding: 12px; background: #ff69b4; 
-            color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer;
-        }
-        @keyframes tremorLento { 
-            0%, 100% { transform: scale(1) rotate(0.5deg); }
-            50% { transform: scale(1.01) rotate(-0.5deg); }
-        }
-        .heart {
-            position: absolute; color: #ff69b4; font-size: 24px;
-            animation: flutuar 5s linear infinite; z-index: 10001;
-        }
-        @keyframes flutuar {
-            0% { transform: translateY(110vh) scale(0); opacity: 1; }
-            100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
-        }
+        .espelho-jogo { border-bottom: 1px solid #334155; padding: 10px 0; }
+        .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 5px; }
+        .status-verde { background: var(--accent); color: #064e3b; }
+        .status-amarelo { background: var(--gold); color: #000; }
+        .status-vermelho { background: var(--danger); color: #fff; }
     </style>
 </head>
 <body>
 
-<div id="overlay-leo">
-    <div id="heart-container"></div>
-    <div class="pop-up-leo">
-        <img src="https://lh3.googleusercontent.com/u/0/d/1v7c0AiFE1MEGv2antzGK4la1PW5RpX2R=w1000-h1000" alt="Leo">
-        <h2>Ti ano anor ❤️</h2>
-        <input type="text" id="senha-leo" placeholder="Responda aqui..." oninput="checarSenhaLeo(this.value)">
-        <button class="btn-fast-reply" onclick="fecharComBotao()">Tbm ti ano anor</button>
-        <p style="color: #666; font-size: 11px; margin-top: 12px; font-weight: bold;">Responda ou clique no botão</p>
+<div id="modal-secreto">
+    <div class="modal-content">
+        <button class="btn-close" onclick="fecharAbaSecreta()">✕</button>
+        <div style="margin-bottom: 15px;">
+            <button class="tab-btn active" id="tab1" onclick="switchTab(1)">ANALISADOR SLIM</button>
+            <button class="tab-btn" id="tab2" onclick="switchTab(2)">PRESERVAR LIDERANÇA</button>
+        </div>
+        
+        <div id="content-tab1">
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; margin-bottom: 15px;">
+                <select id="select-principal" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:5px; border-radius:5px; font-size:11px;"></select>
+                <select id="select-rivais" multiple></select>
+            </div>
+            <button class="btn-calc" style="padding: 10px; margin-top: 0; font-size: 12px;" onclick="executarComparacao()">COMPARAR AGORA</button>
+            <div id="container-comparacao"></div>
+        </div>
+
+        <div id="content-tab2" style="display:none">
+            <p style="font-size: 10px; color: #94a3b8;">Compare ameaças e identifique onde espelhar palpites para travar a pontuação.</p>
+            <select id="select-alvos" multiple style="height: 120px;"></select>
+            <button class="btn-calc" style="padding: 10px; background: var(--gold); color: #000;" onclick="gerarEstrategiaLideranca()">GERAR PALPITE ESPELHADO</button>
+            <div id="output-lideranca"></div>
+        </div>
     </div>
 </div>
 
 <div class="container">
     <header>
         <div class="switch-container">
-            <span style="font-size: 10px; opacity: 0.7;">DARK</span>
-            <label class="switch"><input type="checkbox" onchange="toggleTheme()"><span class="slider"></span></label>
+            <div class="secret-icon" onclick="abrirAbaSecreta()" title="Acesso Secreto">🔐</div>
         </div>
         <h1>PALPITEIROS</h1>
         <div class="criador-txt">Criador: Leandro</div>
@@ -168,9 +166,7 @@
         <div id="resultado-display">
             <div class="section-title">🏆 CLASSIFICAÇÃO GERAL</div>
             <div class="chart-row" id="chart-area"></div>
-            <div class="section-title">📊 Pontos da Rodada</div>
             <div id="hoje-visivel" class="pontos-hoje-box"></div>
-            <div class="section-title">🔍 Conferência Detalhada</div>
             <div id="conf-area" class="conf-grid"></div>
         </div>
     </div>
@@ -180,51 +176,132 @@
 let cacheResultado = { completo: "", ranking: "", hoje: "" };
 const mapaEmoji = { '0️⃣':'0','1️⃣':'1','2️⃣':'2','3️⃣':'3','4️⃣':'4','5️⃣':'5','6️⃣':'6','7️⃣':'7','8️⃣':'8','9️⃣':'9' };
 
-function toggleTheme() { document.body.classList.toggle('light-mode'); }
 function limparTexto(id) { document.getElementById(id).value = ""; }
 function limparIndividual(index) {
     document.querySelectorAll('.palpite-input')[index].value = "";
     document.getElementById('label-' + index).innerText = "Part. " + (index + 1);
 }
 
-// LÓGICA DA ZOEIRA LEO
-function criarCoracao() {
-    const heart = document.createElement('div');
-    heart.className = 'heart';
-    heart.innerHTML = '❤️';
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-    document.getElementById('heart-container').appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
+function switchTab(t) {
+    document.getElementById('content-tab1').style.display = t === 1 ? 'block' : 'none';
+    document.getElementById('content-tab2').style.display = t === 2 ? 'block' : 'none';
+    document.getElementById('tab1').className = t === 1 ? 'tab-btn active' : 'tab-btn';
+    document.getElementById('tab2').className = t === 2 ? 'tab-btn active' : 'tab-btn';
 }
 
-let heartInterval;
+function abrirAbaSecreta() {
+    if(prompt("Chave:") === "2815") {
+        document.getElementById('modal-secreto').style.display = 'block';
+        const sP = document.getElementById('select-principal');
+        const sR = document.getElementById('select-rivais');
+        const sA = document.getElementById('select-alvos');
+        sP.innerHTML = ""; sR.innerHTML = ""; sA.innerHTML = "";
+        document.querySelectorAll('.palpite-input').forEach(input => {
+            if(input.value.trim()){
+                const nome = extrairNome(input.value);
+                const opt = `<option value="${nome}">${nome}</option>`;
+                sP.innerHTML += opt; sR.innerHTML += opt; sA.innerHTML += opt;
+            }
+        });
+    }
+}
+function fecharAbaSecreta() { document.getElementById('modal-secreto').style.display = 'none'; }
+
+function gerarEstrategiaLideranca() {
+    const alvos = Array.from(document.getElementById('select-alvos').selectedOptions).map(o => o.value);
+    const inputs = Array.from(document.querySelectorAll('.palpite-input'));
+    const oficiais = extrairTodosJogos(document.getElementById('resultados_oficiais').value);
+    
+    if (alvos.length < 2) return alert("Selecione pelo menos 2 participantes para comparar!");
+
+    let html = "<h4 style='margin:0 0 10px 0; color:var(--gold)'>🛡️ ANALISE DE TRAVAMENTO</h4>";
+    let jogosMapeados = {};
+
+    alvos.forEach(nome => {
+        const txt = inputs.find(i => extrairNome(i.value) === nome).value;
+        const palpites = extrairTodosJogos(txt);
+        palpites.forEach(p => {
+            if(oficiais.some(of => compararTimes(of.timeA, p.timeA))) return;
+            const chave = p.timeA + " x " + p.timeB;
+            if(!jogosMapeados[chave]) jogosMapeados[chave] = [];
+            jogosMapeados[chave].push({nome, golsA: p.golsA, golsB: p.golsB, tendencia: Math.sign(p.golsA - p.golsB)});
+        });
+    });
+
+    for(let jogo in jogosMapeados) {
+        const dados = jogosMapeados[jogo];
+        if (dados.length < alvos.length) continue; 
+
+        const todosIguais = dados.every(d => d.golsA === dados[0].golsA && d.golsB === dados[0].golsB);
+        const mesmaTendencia = dados.every(d => d.tendencia === dados[0].tendencia);
+
+        let statusClass = "status-vermelho", statusTexto = "DIFERENTES";
+        if (todosIguais) { statusClass = "status-verde"; statusTexto = "IGUAIS"; }
+        else if (mesmaTendencia) { statusClass = "status-amarelo"; statusTexto = "MESMO VENCEDOR"; }
+
+        html += `<div class="espelho-jogo">
+            <strong>${jogo}</strong> <span class="status-badge ${statusClass}">${statusTexto}</span><br>`;
+        dados.forEach(d => {
+            html += `<span style="font-size:10px; color:#94a3b8">👤 ${d.nome}: ${d.golsA}x${d.golsB}</span><br>`;
+        });
+        html += `</div>`;
+    }
+
+    const out = document.getElementById('output-lideranca');
+    out.innerHTML = html;
+    out.style.display = 'block';
+}
+
+function executarComparacao() {
+    const eu = document.getElementById('select-principal').value;
+    const rivais = Array.from(document.getElementById('select-rivais').selectedOptions).map(o => o.value);
+    const oficiais = extrairTodosJogos(document.getElementById('resultados_oficiais').value);
+    const tabAnterior = document.getElementById('tabela_anterior').value;
+    
+    let resHTML = "";
+    rivais.forEach(rival => {
+        if(eu === rival) return;
+        const inputs = Array.from(document.querySelectorAll('.palpite-input'));
+        const txtEu = inputs.find(i => extrairNome(i.value) === eu).value;
+        const txtRival = inputs.find(i => extrairNome(i.value) === rival).value;
+        
+        const palpitesEu = extrairTodosJogos(txtEu);
+        const palpitesRival = extrairTodosJogos(txtRival);
+        
+        let iguaisCount = 0, listaDiferentes = "";
+        
+        palpitesEu.forEach(pEu => {
+            if(oficiais.some(of => compararTimes(of.timeA, pEu.timeA))) return;
+            const pRiv = palpitesRival.find(x => compararTimes(x.timeA, pEu.timeA));
+            if(pRiv) {
+                if(pEu.golsA === pRiv.golsA && pEu.golsB === pRiv.golsB) iguaisCount++;
+                else {
+                    const icon = Math.sign(pEu.golsA - pEu.golsB) === Math.sign(pRiv.golsA - pRiv.golsB) ? "🔵" : "🔴";
+                    listaDiferentes += `<div class="slim-row"><span>${icon} ${pEu.timeA}</span> <span>${pEu.golsA}x${pEu.golsB} vs ${pRiv.golsA}x${pRiv.golsB}</span></div>`;
+                }
+            }
+        });
+
+        const ptsEu = (tabAnterior.split('\n').find(l => l.toLowerCase().includes(eu.toLowerCase()))?.match(/\d+(?=\s+Pts)/i) || [0])[0];
+        const ptsRiv = (tabAnterior.split('\n').find(l => l.toLowerCase().includes(rival.toLowerCase()))?.match(/\d+(?=\s+Pts)/i) || [0])[0];
+        const dif = Math.abs(ptsEu - ptsRiv);
+        
+        resHTML += `<div style="margin-top:15px; border-top:1px solid #334155; padding-top:10px;">
+            <strong style="font-size:11px; color:var(--accent)">🆚 ${eu} vs ${rival}</strong>
+            <div class="resumo-iguais">✅ ${iguaisCount} palpites iguais</div>
+            ${listaDiferentes}
+            <div class="prob-footer">Distância: <strong>${dif} Pts</strong>. Falta acertar <strong>${Math.ceil(dif/3)}</strong> placares.</div>
+        </div>`;
+    });
+    document.getElementById('container-comparacao').innerHTML = resHTML;
+}
+
 function detectarNome(index) {
     const texto = document.querySelectorAll('.palpite-input')[index].value;
-    const nome = extrairNome(texto).toLowerCase();
-
-    if (nome.includes("leo")) {
-        document.getElementById('overlay-leo').style.display = 'flex';
-        if(!heartInterval) heartInterval = setInterval(criarCoracao, 400);
-    }
-
-    document.getElementById('label-' + index).innerText = (texto.trim() === "" || extrairNome(texto) === "Participante") ? "Part. " + (index + 1) : "👤 " + extrairNome(texto);
+    const nome = extrairNome(texto);
+    document.getElementById('label-' + index).innerText = (texto.trim() === "" || nome === "Participante") ? "Part. " + (index + 1) : "👤 " + nome;
 }
 
-function fecharComBotao() {
-    document.getElementById('senha-leo').value = "Tbm ti ano anor";
-    checarSenhaLeo("Tbm ti ano anor");
-}
-
-function checarSenhaLeo(val) {
-    if (val.trim().toLowerCase() === "tbm ti ano anor") {
-        document.getElementById('overlay-leo').style.display = 'none';
-        clearInterval(heartInterval);
-        heartInterval = null;
-    }
-}
-
-// FUNÇÕES DE CÁLCULO
 function padronizarNome(n) {
     let nome = n.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[🔥⏰👤☑️#\*📆•🥇🥈🥉⚪️🔴🏆🔦]/g, '').trim();
     if (nome.includes("pit")) nome = "pitt";
@@ -251,16 +328,16 @@ function extrairTodosJogos(textoBruto) {
     const textoNormalizado = normalizar(textoBruto);
     const linhas = textoNormalizado.split(/\n/);
     let jogos = [];
-    const regex = /([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-\/]+?)\s+(\d+)\s*[xX]\s*(\d+)\s+([a-zA-ZáéíóúçãõÁÉÍÓÚÇÃÕ\s\.\-\/]+)/i;
-
+    const regexPlacar = /(\d+)\s*[xX]\s*(\d+)/;
     linhas.forEach(linha => {
-        const m = linha.match(regex);
+        const m = linha.match(regexPlacar);
         if (m) {
-            let timeB = m[4].split(/\d{2}:\d{2}/)[0].trim();
-            let timeA = m[1].replace(/[☑️#👤⏰]|^\d+\s*/g, '').trim();
-            if(timeA && timeB) {
-                jogos.push({ timeA: timeA, timeB: timeB, golsA: parseInt(m[2]), golsB: parseInt(m[3]) });
-            }
+            const partes = linha.split(m[0]); 
+            let timeA = partes[0].trim();
+            let timeB = partes[1].trim();
+            timeB = timeB.split(/\d{2}:\d{2}/)[0].trim();
+            timeA = timeA.replace(/[☑️#👤⏰]|^\s*\d+\s*[.\-)]?\s*/g, '').trim();
+            if(timeA && timeB) jogos.push({ timeA, timeB, golsA: parseInt(m[1]), golsB: parseInt(m[2]) });
         }
     });
     return jogos;
@@ -276,7 +353,7 @@ function processarBolao() {
     const acumuladosTxt = document.getElementById('tabela_anterior').value;
     let mapaAcum = {};
     acumuladosTxt.split('\n').forEach(l => {
-        const m = l.match(/(\d+)º\s+([a-zA-Záéíóúçãõ\s]+)\s+(\d+)\s+Pts/i);
+        const m = l.match(/(\d+)º\s+([a-zA-Z0-9áéíóúçãõ\s]+)\s+(\d+)\s+Pts/i);
         if (m) mapaAcum[padronizarNome(m[2]).toLowerCase()] = parseInt(m[3]);
     });
 
